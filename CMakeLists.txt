@@ -7,6 +7,8 @@ set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)" CACHE STRING "" FORCE)
 project(RayTracer VERSION 1.0.0 LANGUAGES C CXX)
 
 file(GLOB RAY_TRACER_SOURCES
+    source/vec3.hpp
+    source/colour.hpp
     source/main.cpp
 )
 source_group("source" FILES ${RAY_TRACER_SOURCES})
