@@ -1,4 +1,6 @@
 #include <iostream>
+#include "vec3.hpp"
+#include "colour.hpp"
 
 int main()
 {
@@ -12,15 +14,8 @@ int main()
         std::cerr << "\rScanlines remaining: " << j << "\n" << std::flush;
         for(int i = 0; i < image_width; ++i)
         {
-            auto const r = static_cast<double>(i) / (image_width - 1);
-            auto const g = static_cast<double>(j) / (image_height - 1);
-            auto const b = 0.0;
-
-            auto const ir = static_cast<int>(255.99 * r); 
-            auto const ig = static_cast<int>(255.99 * g);
-            auto const ib = static_cast<int>(255.99 * b);
-
-            std::cout << ir  << ' ' << ' ' << ig << ' ' << ib << "\n";
+            colour pixelColour(static_cast<double>(i) / (image_width - 1), static_cast<double>(j) / (image_height - 1), 0.25);
+            writeColour(std::cout, pixelColour);
         }
     }
     
