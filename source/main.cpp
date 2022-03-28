@@ -3,8 +3,21 @@
 #include "colour.hpp"
 #include "ray.hpp"
 
+bool hitSphere(const point3& center, double radius, const Ray& r)
+{
+    Vec3 oc = r.origin() - center;
+    auto a = dot(r.direction(), r.direction());
+    auto b = 2 * dot(r.direction(), oc);
+    auto c = dot(oc, oc) - radius * radius;
+    return b*b - 4*a*c > 0;
+}
+
 colour rayColour(const Ray &ray)
 {
+    if(hitSphere(point3(0.0, 0.0, -1.0), 0.5, ray))
+    {
+        return colour(1.0, 0.0, 0.0);
+    }
     const Vec3 unitDirection = unitVector(ray.direction());
     const auto t = 0.5 * (unitDirection.y() + 1.0);
     return (1.0 - t) * colour(1.0, 1.0, 1.0) + t * colour(0.5, 0.7, 1.0);
