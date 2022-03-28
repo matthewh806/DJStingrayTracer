@@ -6,11 +6,11 @@
 double hitSphere(const point3& center, double radius, const Ray& r)
 {
     Vec3 oc = r.origin() - center;
-    const auto a = dot(r.direction(), r.direction());
-    const auto b = 2 * dot(r.direction(), oc);
-    const auto c = dot(oc, oc) - radius * radius;
-    const auto discriminant = b*b - 4*a*c;
-    return discriminant < 0.0 ? -1.0 : (-b - std::sqrt(discriminant)) / (2.0*a);
+    const auto a = r.direction().lengthSquared();
+    const auto halfB = dot(r.direction(), oc);
+    const auto c = oc.lengthSquared() - radius * radius;
+    const auto discriminant = halfB * halfB - a*c;
+    return discriminant < 0.0 ? -1.0 : (-halfB - std::sqrt(discriminant)) / a;
 }
 
 colour rayColour(const Ray &ray)
