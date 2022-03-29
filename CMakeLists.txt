@@ -11,6 +11,7 @@ file(GLOB RAY_TRACER_SOURCES
     source/colour.hpp
     source/ray.hpp
     source/hittable.hpp
+    source/hittablelist.hpp
     source/sphere.hpp
     source/main.cpp
 )
