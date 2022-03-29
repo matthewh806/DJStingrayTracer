@@ -10,6 +10,8 @@ file(GLOB RAY_TRACER_SOURCES
     source/vec3.hpp
     source/colour.hpp
     source/ray.hpp
+    source/hittable.hpp
+    source/sphere.hpp
     source/main.cpp
 )
 source_group("source" FILES ${RAY_TRACER_SOURCES})
