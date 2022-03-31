@@ -15,9 +15,15 @@ file(GLOB RAY_TRACER_SOURCES
     source/hittable.hpp
     source/hittablelist.hpp
     source/sphere.hpp
+    source/camera.hpp
+    source/utils.hpp
     source/main.cpp
 )
 source_group("source" FILES ${RAY_TRACER_SOURCES})
 
 add_executable(WeekendRayTracer ${RAY_TRACER_SOURCES})
 set_target_properties(WeekendRayTracer PROPERTIES CXX_STANDARD 17)
+
+if(APPLE)
+    set_target_properties(WeekendRayTracer PROPERTIES XCODE_SCHEME_ARGUMENTS "-i ${CMAKE_CURRENT_SOURCE_DIR}/world_data/basic_world.json")
+endif()
