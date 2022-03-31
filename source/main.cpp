@@ -7,6 +7,8 @@
 #include "ray.hpp"
 #include "sphere.hpp"
 #include "hittablelist.hpp"
+#include "camera.hpp"
+#include "utils.hpp"
 
 const double infinity = std::numeric_limits<double>::infinity();
 
@@ -29,6 +31,7 @@ void initialiseWorld(const int width = 400, const point3& origin = point3(0.0, 0
     const auto aspectRatio = 16.0 / 9.0;
     const auto imageWidth = width;
     const auto imageHeight = static_cast<int>(imageWidth / aspectRatio);
+    const auto samplesPerPixel = 100;
     
     // World
     HittableList world;
@@ -38,13 +41,7 @@ void initialiseWorld(const int width = 400, const point3& origin = point3(0.0, 0
     }
     
     // Camera
-    const auto viewportHeight = 2.0;
-    const auto viewportWidth = aspectRatio * viewportHeight;
-    const auto focalLength = 1.0;
-
-    const auto horizontal = Vec3(viewportWidth, 0.0, 0.0);
-    const auto vertical = Vec3(0.0, viewportHeight, 0.0);
-    const auto lowerLeftCorner = origin - horizontal / 2 -  vertical / 2 - Vec3(0.0, 0.0, focalLength);
+    Camera camera(aspectRatio, 2.0, 1.0, origin);
     
     // Render
     std::cout << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
@@ -54,11 +51,16 @@ void initialiseWorld(const int width = 400, const point3& origin = point3(0.0, 0
         std::cerr << "\rScanlines remaining: " << j << "\n" << std::flush;
         for(int i = 0; i < imageWidth; ++i)
         {
-            auto const u = static_cast<double>(i) / (imageWidth - 1);
-            auto const v = static_cast<double>(j) / (imageHeight - 1);
-            Ray r(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
-            colour pixelColour = rayColour(r, world, colourFrom, colourTo);
-            writeColour(std::cout, pixelColour);
+            colour pixelColour(0.0, 0.0, 0.0);
+            for(int s = 0; s < samplesPerPixel; ++s)
+            {
+                auto const u = static_cast<double>(i + randomDouble()) / (imageWidth - 1);
+                auto const v = static_cast<double>(j + randomDouble()) / (imageHeight - 1);
+                Ray r = camera.getRay(u, v);
+                pixelColour += rayColour(r, world, colourFrom, colourTo);
+            }
+           
+            writeColour(std::cout, pixelColour, samplesPerPixel);
         }
     }
     
