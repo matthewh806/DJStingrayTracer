@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cmath>
+#include "utils.hpp"
 
 class Vec3
 {
@@ -83,6 +84,11 @@ public:
         return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
     }
     
+    inline static Vec3 random(double min, double max)
+    {
+        return Vec3(randomDouble(min, max), randomDouble(min, max), randomDouble(min, max));
+    }
+    
     friend std::ostream& operator<<(std::ostream& os, const Vec3 &v);
     friend Vec3 operator+(const Vec3& u, const Vec3& v);
     friend Vec3 operator-(const Vec3& u, const Vec3& v);
@@ -147,6 +153,20 @@ inline Vec3 cross(const Vec3& u, const Vec3& v)
 inline Vec3 unitVector(Vec3 v)
 {
     return v / v.length();
+}
+
+static Vec3 randomInUnitSphere()
+{
+    while(true)
+    {
+        auto const p = Vec3::random(-1, 1);
+        if(p.lengthSquared() >= 1)
+        {
+            continue;
+        }
+        
+        return p;
+    }
 }
 
 
