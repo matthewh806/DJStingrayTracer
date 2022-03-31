@@ -12,12 +12,19 @@
 
 const double infinity = std::numeric_limits<double>::infinity();
 
-colour rayColour(const Ray &ray, const Hittable& world, colour colourFrom, colour colourTo)
+colour rayColour(const Ray &ray, const Hittable& world, colour colourFrom, colour colourTo, int depth)
 {
     HitRecord hitRecord;
+    
+    if(depth <= 0)
+    {
+        return colour(0.0, 0.0, 0.0);
+    }
+    
     if(world.hit(ray, 0.0, infinity, hitRecord))
     {
-        return 0.5 * (hitRecord.normal + colourFrom);
+        point3 target = hitRecord.p + hitRecord.normal + randomInUnitSphere();
+        return 0.5 * rayColour(Ray(hitRecord.p, target - hitRecord.p), world, colourFrom, colourTo, depth-1);
     }
     
     const Vec3 unitDirection = unitVector(ray.direction());
@@ -32,6 +39,7 @@ void initialiseWorld(const int width = 400, const point3& origin = point3(0.0, 0
     const auto imageWidth = width;
     const auto imageHeight = static_cast<int>(imageWidth / aspectRatio);
     const auto samplesPerPixel = 100;
+    const auto maxDepth = 50;
     
     // World
     HittableList world;
@@ -57,7 +65,7 @@ void initialiseWorld(const int width = 400, const point3& origin = point3(0.0, 0
                 auto const u = static_cast<double>(i + randomDouble()) / (imageWidth - 1);
                 auto const v = static_cast<double>(j + randomDouble()) / (imageHeight - 1);
                 Ray r = camera.getRay(u, v);
-                pixelColour += rayColour(r, world, colourFrom, colourTo);
+                pixelColour += rayColour(r, world, colourFrom, colourTo, maxDepth);
             }
            
             writeColour(std::cout, pixelColour, samplesPerPixel);
