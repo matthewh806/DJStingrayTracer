@@ -21,7 +21,7 @@ colour rayColour(const Ray &ray, const Hittable& world, colour colourFrom, colou
         return colour(0.0, 0.0, 0.0);
     }
     
-    if(world.hit(ray, 0.0, infinity, hitRecord))
+    if(world.hit(ray, 0.001, infinity, hitRecord))
     {
         point3 target = hitRecord.p + hitRecord.normal + randomInUnitSphere();
         return 0.5 * rayColour(Ray(hitRecord.p, target - hitRecord.p), world, colourFrom, colourTo, depth-1);
