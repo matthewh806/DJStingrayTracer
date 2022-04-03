@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include "json.hpp"
 #include "cxxopts.hpp"
 #include "vec3.hpp"
@@ -7,7 +8,9 @@
 #include "ray.hpp"
 #include "sphere.hpp"
 #include "hittablelist.hpp"
+#include "material.hpp"
 #include "camera.hpp"
+
 #include "utils.hpp"
 
 const double infinity = std::numeric_limits<double>::infinity();
@@ -23,8 +26,14 @@ colour rayColour(const Ray &ray, const Hittable& world, colour colourFrom, colou
     
     if(world.hit(ray, 0.001, infinity, hitRecord))
     {
-        point3 target = hitRecord.p + hitRecord.normal + randomInUnitSphere();
-        return 0.5 * rayColour(Ray(hitRecord.p, target - hitRecord.p), world, colourFrom, colourTo, depth-1);
+        Ray scatteredRay;
+        colour attenuation;
+        if(hitRecord.material->scatter(ray, hitRecord, attenuation, scatteredRay))
+        {
+            return attenuation * rayColour(scatteredRay, world, colourFrom, colourTo, depth-1);
+        }
+        
+        return colour(0.0, 0.0, 0.0);
     }
     
     const Vec3 unitDirection = unitVector(ray.direction());
@@ -108,13 +117,54 @@ int main(int argc, char** argv)
     auto const colourFromVec = convertVectorToVec3(inputDataJson.at("colourfrom").get<std::vector<double>>());
     auto const colourToVec = convertVectorToVec3(inputDataJson.at("colourto").get<std::vector<double>>());
     auto const hittablesJson = inputDataJson.at("hittables");
-    std::vector<std::shared_ptr<Hittable>> hittables;
+    auto const materialsJson = inputDataJson.at("materials");
+
+    std::vector<std::shared_ptr<Material>> materials;
+    std::vector<std::string> materialTypes = {"Lambertian", "Metal"};
+    for(auto const& material : materialsJson)
+    {
+        colour const albedo = convertVectorToVec3(material.at("albedo").get<std::vector<double>>());
+        auto const name = material.at("name").get<std::string>();
+        auto const type = material.at("type");
+        
+        // TODO: not sustainable... improve!
+        if(std::find(materialTypes.begin(), materialTypes.end(), type) == materialTypes.end())
+        {
+            std::cerr << "Invalid material type specified for " << name << "\n";
+            return 1;
+        }
+        
+        if(type == "Lambertian")
+        {
+            materials.push_back(std::make_shared<Lambertian>(name, albedo));
+        }
+        else if(type == "Metal")
+        {
+            // TODO
+            //materials.push_back(std::make_shared<Metal>(name, albedo));
+        }
+    }
     
+    std::vector<std::shared_ptr<Hittable>> hittables;
     for(auto const& hittable : hittablesJson)
     {
         auto const pos = convertVectorToVec3(hittable.at("position").get<std::vector<double>>());
         auto const radius = hittable.at("radius").get<double>();
-        hittables.push_back(std::make_shared<Sphere>(pos, radius));
+        auto const materialName = hittable.at("material").get<std::string>();
+        
+        // check material exists
+        auto material = std::find_if(materials.begin(), materials.end(), [&](std::shared_ptr<Material> material)
+        {
+            return material->getName() == materialName;
+        });
+        
+        if(material == materials.end())
+        {
+            std::cerr << "Hittable points to invalid material type " << materialName << "\n";
+            return 1;
+        }
+        
+        hittables.push_back(std::make_shared<Sphere>(pos, radius, *material));
     }
     
     initialiseWorld(width, origin, colourFromVec, colourToVec, hittables);
