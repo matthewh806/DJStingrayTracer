@@ -89,6 +89,12 @@ public:
         return Vec3(randomDouble(min, max), randomDouble(min, max), randomDouble(min, max));
     }
     
+    bool nearZero() const
+    {
+        const auto s = 1e-8;
+        return std::fabs(e[0]) < s && std::fabs(e[1]) < s && std::fabs(e[2]) < s;
+    }
+    
     friend std::ostream& operator<<(std::ostream& os, const Vec3 &v);
     friend Vec3 operator+(const Vec3& u, const Vec3& v);
     friend Vec3 operator-(const Vec3& u, const Vec3& v);
