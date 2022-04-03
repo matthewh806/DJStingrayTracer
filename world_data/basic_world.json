@@ -7,11 +7,26 @@
     [
         {
             "position": [0.0, 0.0, -1.0],
-            "radius": 0.5
+            "radius": 0.5,
+            "material": "middle"
         },
         {
             "position": [0.0, -100.5, -1.0],
-            "radius": 100.0
+            "radius": 100.0,
+            "material": "ground"
+        }
+    ],
+    "materials":
+    [
+        {
+            "albedo": [0.8, 0.8, 0.0],
+            "type": "Lambertian",
+            "name": "ground"
+        },
+        {
+            "albedo": [0.7, 0.3, 0.3],
+            "type": "Lambertian",
+            "name": "middle"
         }
     ]
 }
