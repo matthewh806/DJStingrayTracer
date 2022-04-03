@@ -169,6 +169,22 @@ static Vec3 randomInUnitSphere()
     }
 }
 
+static Vec3 randomUnitVector()
+{
+    return unitVector(randomInUnitSphere());
+}
+
+static Vec3 randomInHemisphere(const Vec3& normal)
+{
+    const Vec3 inUnitSphere = randomInUnitSphere();
+    if(dot(inUnitSphere, normal) > 0.0)
+    {
+        return inUnitSphere;
+    }
+    
+    return -inUnitSphere;
+}
+
 
 
 
