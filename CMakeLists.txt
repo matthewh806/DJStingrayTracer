@@ -16,6 +16,7 @@ file(GLOB RAY_TRACER_SOURCES
     source/hittablelist.hpp
     source/sphere.hpp
     source/camera.hpp
+    source/material.hpp
     source/utils.hpp
     source/main.cpp
 )
