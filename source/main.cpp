@@ -120,10 +120,9 @@ int main(int argc, char** argv)
     auto const materialsJson = inputDataJson.at("materials");
 
     std::vector<std::shared_ptr<Material>> materials;
-    std::vector<std::string> materialTypes = {"Lambertian", "Metal"};
+    std::vector<std::string> materialTypes = {"Lambertian", "Metal", "Dielectric"};
     for(auto const& material : materialsJson)
     {
-        colour const albedo = convertVectorToVec3(material.at("albedo").get<std::vector<double>>());
         auto const name = material.at("name").get<std::string>();
         auto const type = material.at("type");
         
@@ -136,12 +135,19 @@ int main(int argc, char** argv)
         
         if(type == "Lambertian")
         {
+            colour const albedo = convertVectorToVec3(material.at("albedo").get<std::vector<double>>());
             materials.push_back(std::make_shared<Lambertian>(name, albedo));
         }
         else if(type == "Metal")
         {
+            colour const albedo = convertVectorToVec3(material.at("albedo").get<std::vector<double>>());
             auto const fuzz = material.at("fuzz").get<double>();
             materials.push_back(std::make_shared<Metal>(name, albedo, fuzz));
+        }
+        else if(type == "Dielectric")
+        {
+            auto const refractiveIndex = material.at("refractiveindex").get<double>();
+            materials.push_back(std::make_shared<Dielectric>(name, refractiveIndex));
         }
     }
     
