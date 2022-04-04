@@ -140,8 +140,7 @@ int main(int argc, char** argv)
         }
         else if(type == "Metal")
         {
-            // TODO
-            //materials.push_back(std::make_shared<Metal>(name, albedo));
+            materials.push_back(std::make_shared<Metal>(name, albedo));
         }
     }
     
