@@ -140,7 +140,8 @@ int main(int argc, char** argv)
         }
         else if(type == "Metal")
         {
-            materials.push_back(std::make_shared<Metal>(name, albedo));
+            auto const fuzz = material.at("fuzz").get<double>();
+            materials.push_back(std::make_shared<Metal>(name, albedo, fuzz));
         }
     }
     
