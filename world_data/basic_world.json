@@ -21,7 +21,7 @@
             "material": "left"
         },
         {
-            "position": [0.7, 0.0, -1.5],
+            "position": [1.0, 0.0, -1.0],
             "radius": 0.5,
             "material": "right"
         },
@@ -50,9 +50,8 @@
             "name": "left"
         },
         {
-            "albedo": [0.8, 0.6, 0.2],
-            "fuzz": 0.3,
-            "type": "Metal",
+            "refractiveindex": 1.5,
+            "type": "Dielectric",
             "name": "right"
         }
     ]
