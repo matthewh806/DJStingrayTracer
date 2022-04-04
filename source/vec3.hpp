@@ -196,6 +196,14 @@ Vec3 reflect(const Vec3& v, const Vec3& n)
     return v - 2*dot(v,n) * n;
 }
 
+Vec3 refract(const Vec3& v, const Vec3& n, double etaiOverEtat)
+{
+    auto cosTheta = std::fmin(dot(-v,n), 1.0);
+    Vec3 rOutPerpendicular = etaiOverEtat * (v + cosTheta * n);
+    Vec3 rOutParallel = -std::sqrt(std::fabs(1.0 - rOutPerpendicular.lengthSquared())) * n;
+    return rOutPerpendicular + rOutParallel;
+}
+
 
 
 
