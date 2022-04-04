@@ -65,3 +65,30 @@ private:
     colour mAlbedo;
     double mFuzz;
 };
+
+class Dielectric : public Material
+{
+public:
+    Dielectric(const std::string& name, double refractionIndex) : Material(name), mRefractionIndex(refractionIndex)
+    {
+        
+    }
+    
+    bool scatter(const Ray& rayIn, const HitRecord& hitRecord, colour& attenuation, Ray& scatteredRay) const override
+    {
+        attenuation = colour(1.0, 1.0, 1.0);
+        auto refractionRatio = hitRecord.frontFace ? 1.0 / mRefractionIndex : mRefractionIndex;
+        
+        Vec3 unitDirection = unitVector(rayIn.direction());
+        double cosTheta = std::fmin(dot(-unitDirection, hitRecord.normal), 1.0);
+        double sinTheta = std::sqrt(1.0 - cosTheta * cosTheta);
+        
+        bool cannotRefract = refractionRatio * sinTheta > 1.0;
+        Vec3 direction = cannotRefract ? reflect(unitDirection, hitRecord.normal) : refract(unitDirection, hitRecord.normal, refractionRatio);
+        scatteredRay = Ray(hitRecord.p, direction);
+        return true;
+    }
+    
+private:
+    double mRefractionIndex;
+};
