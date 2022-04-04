@@ -30,7 +30,6 @@ public:
     bool scatter(const Ray&, const HitRecord& hitRecord, colour& attenuation, Ray& scatteredRay) const override
     {
         auto scatterDirection = hitRecord.normal + randomUnitVector();
-        
         if(scatterDirection.nearZero())
         {
             scatterDirection = hitRecord.normal;
@@ -40,6 +39,26 @@ public:
         attenuation = mAlbedo;
         
         return true;
+    }
+    
+private:
+    colour mAlbedo;
+};
+
+class Metal : public Material
+{
+public:
+    Metal(const std::string& name, const colour& albedo) : Material(name), mAlbedo(albedo)
+    {
+        
+    }
+    
+    bool scatter(const Ray& rayIn, const HitRecord& hitRecord, colour& attenuation, Ray& scatteredRay) const override
+    {
+        auto const reflectedRay = reflect(unitVector(rayIn.direction()), hitRecord.normal);
+        scatteredRay = Ray(hitRecord.p, reflectedRay);
+        attenuation = mAlbedo;
+        return dot(scatteredRay.direction(), hitRecord.normal) > 0.0;
     }
     
 private:
