@@ -6,6 +6,7 @@
     "vup": [0.0, 1.0, 0.0],
     "verticalfieldofview": 90.0,
     "width": 400,
+    "aperture": 8.0,
     "hittables": 
     [
          {
