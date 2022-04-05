@@ -83,12 +83,19 @@ public:
         double cosTheta = std::fmin(dot(-unitDirection, hitRecord.normal), 1.0);
         double sinTheta = std::sqrt(1.0 - cosTheta * cosTheta);
         
-        bool cannotRefract = refractionRatio * sinTheta > 1.0;
-        Vec3 direction = cannotRefract ? reflect(unitDirection, hitRecord.normal) : refract(unitDirection, hitRecord.normal, refractionRatio);
+        bool cannotRefract = refractionRatio * sinTheta > 1.0;  
+        Vec3 direction = cannotRefract || reflectance(cosTheta, mRefractionIndex) > randomDouble() ? reflect(unitDirection, hitRecord.normal) : refract(unitDirection, hitRecord.normal, refractionRatio);
         scatteredRay = Ray(hitRecord.p, direction);
         return true;
     }
     
 private:
+    static double reflectance(double cosine, double refractiveIndex)
+    {
+        // Schlick's approximation
+        auto r0 = (1.0 - refractiveIndex) / (1.0 + refractiveIndex);
+        r0 = r0*r0;
+        return r0 + (1.0 - r0) * std::pow(1.0 - cosine, 5);
+    }
     double mRefractionIndex;
 };
