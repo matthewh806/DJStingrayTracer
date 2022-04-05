@@ -95,6 +95,11 @@ public:
         return std::fabs(e[0]) < s && std::fabs(e[1]) < s && std::fabs(e[2]) < s;
     }
     
+    inline static Vec3 random()
+    {
+        return Vec3(randomDouble(), randomDouble(), randomDouble());
+    }
+    
     friend std::ostream& operator<<(std::ostream& os, const Vec3 &v);
     friend Vec3 operator+(const Vec3& u, const Vec3& v);
     friend Vec3 operator-(const Vec3& u, const Vec3& v);
