@@ -10,8 +10,8 @@
 #include "hittablelist.hpp"
 #include "material.hpp"
 #include "camera.hpp"
-
 #include "utils.hpp"
+#include "randomworldgenerator.hpp"
 
 const double infinity = std::numeric_limits<double>::infinity();
 
@@ -44,29 +44,23 @@ colour rayColour(const Ray &ray, const Hittable& world, colour colourFrom, colou
 void initialiseWorld(const double verticalFov = 90.0,
                      const int width = 400,
                      const double aperture = 0.0,
+                     const double aspectRatio = 16.0/9.0,
+                     const double samplesPerPixel = 100,
+                     const double distanceToFocus = 10.0,
                      const point3& lookFrom = point3(0.0, 0.0, -1.0),
                      const point3& lookAt = point3(0.0, 0.0, 0.0),
                      const Vec3& vUp = Vec3(0.0, 1.0, 0.0),
                      const colour& colourFrom = colour(1.0, 1.0, 1.0),
                      const colour& colourTo = colour(0.5, 0.7, 1.0),
-                     std::vector<std::shared_ptr<Hittable>> hittables = std::vector<std::shared_ptr<Hittable>>())
+                     HittableList world = {})
 {
     // Image
-    const auto aspectRatio = 16.0 / 9.0;
     const auto imageWidth = width;
     const auto imageHeight = static_cast<int>(imageWidth / aspectRatio);
-    const auto samplesPerPixel = 100;
     const auto maxDepth = 50;
     
-    // World
-    HittableList world;
-    for(auto& hittable : hittables)
-    {
-        world.add(std::move(hittable));
-    }
-    
     // Camera
-    Camera camera(verticalFov, aspectRatio, (lookFrom - lookAt).length(), aperture, lookFrom, lookAt, vUp);
+    Camera camera(verticalFov, aspectRatio, distanceToFocus, aperture, lookFrom, lookAt, vUp);
     
     // Render
     std::cout << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
@@ -108,8 +102,14 @@ int main(int argc, char** argv)
     
     if(jsonPath.empty())
     {
-        std::cerr << "No json path specified\n";
-        return 1;
+        std::cerr << "Generating a random world\n";
+        auto world = generateRandomWorld();
+        initialiseWorld(20.0, 1200.0, 0.1, 3.0/2.0, 500, 10.0,
+                        Vec3(12.0, 2.0, 3.0), Vec3(0.0, 0.0, 0.0), Vec3(0.0, 1.0, 0.0),
+                        colour(1.0, 1.0, 1.0), colour(0.5, 0.7, 1.0),
+                        generateRandomWorld());
+        
+        return 0;
     }
     
     std::ifstream inputStream(jsonPath);
@@ -185,5 +185,12 @@ int main(int argc, char** argv)
         hittables.push_back(std::make_shared<Sphere>(pos, radius, *material));
     }
     
-    initialiseWorld(verticalFov, width, aperture, lookFrom, lookAt, vUp, colourFromVec, colourToVec, hittables);
+    // World
+    HittableList world;
+    for(auto& hittable : hittables)
+    {
+        world.add(std::move(hittable));
+    }
+    
+    initialiseWorld(verticalFov, width, aperture, 16.0/9.0, 100, (lookFrom - lookAt).length(), lookFrom, lookAt, vUp, colourFromVec, colourToVec, world);
 }
