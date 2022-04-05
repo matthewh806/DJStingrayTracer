@@ -16,7 +16,9 @@ file(GLOB RAY_TRACER_SOURCES
     source/hittablelist.hpp
     source/sphere.hpp
     source/camera.hpp
+    source/material.hpp
     source/utils.hpp
+    source/randomworldgenerator.hpp
     source/main.cpp
 )
 source_group("source" FILES ${RAY_TRACER_SOURCES})

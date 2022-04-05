@@ -1,17 +1,62 @@
 {
     "colourfrom": [1.0, 1.0, 1.0],
     "colourto": [0.5, 0.7, 1.0],
-    "origin": [0.0, 0.0, 0.0],
+    "lookfrom": [-2.0, 2.0, 1.0],
+    "lookat": [0.0, 0.0, -1.0],
+    "vup": [0.0, 1.0, 0.0],
+    "verticalfieldofview": 90.0,
     "width": 400,
+    "aperture": 8.0,
     "hittables": 
     [
-        {
-            "position": [0.0, 0.0, -1.0],
-            "radius": 0.5
+         {
+            "position": [0.0, -100.5, -1.0],
+            "radius": 100.0,
+            "material": "ground"
         },
         {
-            "position": [0.0, -100.5, -1.0],
-            "radius": 100.0
+            "position": [0.0, 0.0, -1.0],
+            "radius": 0.5,
+            "material": "middle"
+        },
+        {
+            "position": [-1.0, 0.0, -1.0],
+            "radius": 0.5,
+            "material": "left"
+        },
+        {
+            "position": [1.0, 0.0, -1.0],
+            "radius": -0.5,
+            "material": "right"
+        },
+        {
+            "position": [0.75, 0.0, -2.0],
+            "radius": 0.7,
+            "material": "middle"
+        }
+    ],
+    "materials":
+    [
+        {
+            "albedo": [0.8, 0.8, 0.0],
+            "type": "Lambertian",
+            "name": "ground"
+        },
+        {
+            "albedo": [0.7, 0.3, 0.3],
+            "type": "Lambertian",
+            "name": "middle"
+        },
+        {
+            "albedo": [0.8, 0.8, 0.8],
+            "type": "Metal",
+            "fuzz": 0.7,
+            "name": "left"
+        },
+        {
+            "refractiveindex": 2.0,
+            "type": "Dielectric",
+            "name": "right"
         }
     ]
 }
