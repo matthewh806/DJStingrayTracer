@@ -1,7 +1,8 @@
 {
     "colourfrom": [1.0, 1.0, 1.0],
     "colourto": [0.5, 0.7, 1.0],
-    "origin": [0.0, 0.0, 0.0],
+    "origin": [0.0, 0.0, 1.0],
+    "verticalfieldofview": 45.0,
     "width": 400,
     "hittables": 
     [
@@ -22,11 +23,11 @@
         },
         {
             "position": [1.0, 0.0, -1.0],
-            "radius": 0.5,
+            "radius": -0.5,
             "material": "right"
         },
         {
-            "position": [-1.0, 0.0, -2.0],
+            "position": [0.75, 0.0, -2.0],
             "radius": 0.7,
             "material": "middle"
         }
@@ -50,7 +51,7 @@
             "name": "left"
         },
         {
-            "refractiveindex": 1.5,
+            "refractiveindex": 2.0,
             "type": "Dielectric",
             "name": "right"
         }
