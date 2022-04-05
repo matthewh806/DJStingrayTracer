@@ -1,8 +1,10 @@
 {
     "colourfrom": [1.0, 1.0, 1.0],
     "colourto": [0.5, 0.7, 1.0],
-    "origin": [0.0, 0.0, 1.0],
-    "verticalfieldofview": 45.0,
+    "lookfrom": [-2.0, 2.0, 1.0],
+    "lookat": [0.0, 0.0, -1.0],
+    "vup": [0.0, 1.0, 0.0],
+    "verticalfieldofview": 90.0,
     "width": 400,
     "hittables": 
     [
