@@ -41,7 +41,12 @@ colour rayColour(const Ray &ray, const Hittable& world, colour colourFrom, colou
     return (1.0 - t) * colourFrom + t * colourTo;
 }
 
-void initialiseWorld(const int width = 400, const point3& origin = point3(0.0, 0.0, 0.0), const colour& colourFrom = colour(1.0, 1.0, 1.0), const colour& colourTo = colour(0.5, 0.7, 1.0), std::vector<std::shared_ptr<Hittable>> hittables = std::vector<std::shared_ptr<Hittable>>())
+void initialiseWorld(const double verticalFov = 90.0,
+                     const int width = 400,
+                     const point3& origin = point3(0.0, 0.0, 0.0),
+                     const colour& colourFrom = colour(1.0, 1.0, 1.0),
+                     const colour& colourTo = colour(0.5, 0.7, 1.0),
+                     std::vector<std::shared_ptr<Hittable>> hittables = std::vector<std::shared_ptr<Hittable>>())
 {
     // Image
     const auto aspectRatio = 16.0 / 9.0;
@@ -58,7 +63,7 @@ void initialiseWorld(const int width = 400, const point3& origin = point3(0.0, 0
     }
     
     // Camera
-    Camera camera(aspectRatio, 2.0, 1.0, origin);
+    Camera camera(verticalFov, aspectRatio, 1.0, origin);
     
     // Render
     std::cout << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
@@ -113,6 +118,7 @@ int main(int argc, char** argv)
     };
     
     auto const width = inputDataJson.at("width").get<int>();
+    auto const verticalFov = inputDataJson.at("verticalfieldofview").get<double>();
     auto const origin = convertVectorToVec3(inputDataJson.at("origin").get<std::vector<double>>());
     auto const colourFromVec = convertVectorToVec3(inputDataJson.at("colourfrom").get<std::vector<double>>());
     auto const colourToVec = convertVectorToVec3(inputDataJson.at("colourto").get<std::vector<double>>());
@@ -173,5 +179,5 @@ int main(int argc, char** argv)
         hittables.push_back(std::make_shared<Sphere>(pos, radius, *material));
     }
     
-    initialiseWorld(width, origin, colourFromVec, colourToVec, hittables);
+    initialiseWorld(verticalFov, width, origin, colourFromVec, colourToVec, hittables);
 }
