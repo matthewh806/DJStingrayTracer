@@ -1,0 +1,33 @@
+{
+    "colourfrom": [1.0, 1.0, 1.0],
+    "colourto": [0.5, 0.7, 1.0],
+    "origin": [0.0, 0.0, 0.0],
+    "verticalfieldofview": 90.0,
+    "width": 400,
+    "hittables": 
+    [
+        {
+            "position": [-0.707, 0.0, -1.0],
+            "radius": 0.707,
+            "material": "left"
+        },
+        {
+            "position": [0.707, 0.0, -1.0],
+            "radius": 0.707,
+            "material": "right"
+        }
+    ],
+    "materials":
+    [
+        {
+            "albedo": [0.0, 0.0, 1.0],
+            "type": "Lambertian",
+            "name": "left"
+        },
+        {
+            "albedo": [1.0, 0.0, 0.0],
+            "type": "Lambertian",
+            "name": "right"
+        }
+    ]
+}
