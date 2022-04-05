@@ -5,6 +5,7 @@
 // Common Headers
 
 // Constants
+constexpr double pi = 3.1415926535897932385;
 
 // Utility Functions
 inline double randomDouble(double min, double max)
@@ -17,4 +18,9 @@ inline double randomDouble(double min, double max)
 inline double randomDouble()
 {
     randomDouble(0.0, 1.0);
+}
+
+inline double degreesToRadians(double degrees)
+{
+    return degrees * pi / 180.0;
 }
